@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="description"
+        content="">
+  <meta name="keywords" content="Imitation Learning, Language Conditioned, Manipulation">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Modularity through Attention: Efficient Training and Transfer of Language-Conditioned Policies for Robot Manipulation</title>
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-PYVRSFMDRL"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+
+    gtag('js', new Date());
+
+    gtag('config', 'G-PYVRSFMDRL');
+  </script>
+
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro"
+        rel="stylesheet">
+
+  <link rel="stylesheet" href="/static/css/bulma.min.css">
+  <link rel="stylesheet" href="/static/css/bulma-carousel.min.css">
+  <link rel="stylesheet" href="/static/css/bulma-slider.min.css">
+  <link rel="stylesheet" href="/static/css/fontawesome.all.min.css">
+  <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  <link rel="stylesheet" href="/static/css/index.css">
+  <link rel="icon" href="/static/images/irl_lab.png">
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script defer src="/static/js/fontawesome.all.min.js"></script>
+  <script src="/static/js/bulma-carousel.min.js"></script>
+  <script src="/static/js/bulma-slider.min.js"></script>
+  <script src="/static/js/index.js"></script>
+</head>
+<body>
+
+<nav class="navbar" role="navigation" aria-label="main navigation">
+  <div class="navbar-brand">
+    <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+    </a>
+  </div>
+  <div class="navbar-menu">
+    <div class="navbar-start" style="flex-grow: 1; justify-content: center;">
+      <a class="navbar-item" href="https://interactive-robotics.engineering.asu.edu/">
+      <span class="icon">
+          <i class="fas fa-home"></i>
+      </span>
+      </a>
+
+      <div class="navbar-item has-dropdown is-hoverable">
+        <a class="navbar-link">
+          More Research
+        </a>
+        <div class="navbar-dropdown">
+          <a class="navbar-item" href="https://simonstepputtis.com/neurips-2020-lcim/">
+            Language-Conditioned Imitation Learning (Neurips 2020)
+          </a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+
+<section class="hero">
+  <div class="hero-body">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered">
+        <div class="column has-text-centered">
+          <h1 class="title is-1 publication-title">Learning Modular Language-Conditioned Robot Policies through Attention</h1>
+          <div class="is-size-5 publication-authors">
+            <span class="author-block">
+              <!-- <a href="https://google.com">Yifan Zhou</a><sup>1</sup>,</span> -->
+              <a href="https://yifanzhou.com">Yifan Zhou</a><sup>1</sup>,</span>
+            <span class="author-block">
+              Shubham Sonawani<sup>1</sup>,</span>
+            <span class="author-block">
+              Mariano Phielipp<sup>2</sup>,
+            </span>
+            <span class="author-block">
+              <a href="http://henibenamor.weebly.com/">Heni Ben Amor</a><sup>1</sup>,
+            </span>
+            <span class="author-block">
+              <a href="https://simonstepputtis.com/">Simon Stepputtis</a><sup>3</sup>,
+            </span>
+          </div>
+
+          <div class="is-size-5 publication-authors">
+            <span class="author-block"><sup>1</sup>Arizona State University,</span>
+            <span class="author-block"><sup>2</sup>Intel AI,</span>
+            <span class="author-block"><sup>3</sup>Carnegie Mellon University</span>
+          </div>
+
+          <div class="column has-text-centered">
+            <div class="publication-links">
+              <!-- PDF Link. -->
+              <span class="link-block">
+                <a href="https://link.springer.com/article/10.1007/s10514-023-10129-1"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fas fa-file-pdf"></i>
+                  </span>
+                  <span>Paper</span>
+                </a>
+              </span>
+              <!-- Code Link. -->
+              <span class="link-block">
+                <a href="https://github.com/ir-lab/ModAttn"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fab fa-github"></i>
+                  </span>
+                  <span>Code</span>
+                  </a>
+              </span>
+              <!-- Dataset Link. -->
+              <!-- <span class="link-block">
+                <a href="https://github.com/google/nerfies/releases/tag/0.1"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="far fa-images"></i>
+                  </span>
+                  <span>Data</span>
+                  </a> -->
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="hero teaser">
+  <div class="container is-max-desktop">
+    <div class="hero-body">
+      <img src="/static/images/auro/intro.png"
+           class="interpolation-image"
+           alt="Interpolate start reference image."/>
+      <h3 class="subtitle has-text-centered">
+        Our proposed method demonstrates high performance on a variety of tasks. It is able to transfer to new robots in a data-efficient manner, while still keeping a high execution performance. It also accepts adding new behaviors to an existing trained policy. Besides them, we also demonstrate the ability to learn relational tasks, where there are two objects involved in the same sentence.
+      </h3>
+      <h3 class="subtitle has-text-centered">
+        This work is related to CoRL 2022 paper <a href="https://languageforrobots.com">"Modularity through Attention"</a> and has been published on Autonomous Robotics (2023).
+      </h3>
+    </div>
+  </div>
+</section>
+
+
+
+
+
+
+<!-- 
+
+<section class="hero is-light is-small">
+  <div class="hero-body">
+    <div class="columns is-centered has-text-centered">
+      <h2 class="title is-3">Robot Executions</h2>
+    </div>
+    <div class="container">
+      <div id="results-carousel" class="carousel results-carousel">
+        <div class="item item-steve">
+          <img src="/static/images/tweet2.gif" alt="transfer between robots" width="100%">
+          <p>Our method is data-efficient for training and transfer. This is achieved by forming sub-modules through attention layers in a cascading manner.</p>
+        </div>
+        <div class="item item-steve">
+          <img src="/static/images/transfer_robots.gif" alt="transfer between robots" width="100%">
+          <p>Our method is data-efficient for training and transfer. This is achieved by forming sub-modules through attention layers in a cascading manner.</p>
+        </div>
+        <div class="item item-steve">
+          <img src="/static/images/sim2real.gif" alt="transfer between robots" width="100%">
+          <p>Our method is data-efficient for training and transfer. This is achieved by forming sub-modules through attention layers in a cascading manner.</p>
+        </div>
+        <div class="item item-steve">
+          <img src="/static/images/tweet_inspection.gif" alt="transfer between robots" width="100%">
+          <p>Our method is data-efficient for training and transfer. This is achieved by forming sub-modules through attention layers in a cascading manner.</p>
+        </div>
+        <div class="item item-steve">
+          <img src="/static/images/tweet_obstacle_cropped_AdobeExpress.gif" alt="transfer between robots" width="100%">
+          <p>Our method is data-efficient for training and transfer. This is achieved by forming sub-modules through attention layers in a cascading manner.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section> -->
+
+
+<section class="hero is-light is-small">
+  <div class="hero-body">
+    <div class="columns is-centered has-text-centered">
+      <h2 class="title is-3">Robot Executions</h2>
+    </div>
+    <div class="container">
+      <div id="results-carousel" class="carousel results-carousel">
+        <div class="item item-steve">
+          <img src="/static/images/auro/moreobj_27.gif" alt="transfer between robots" width="100%">
+          <p>Our method is data-efficient for training and transfer. This is achieved by forming sub-modules through attention layers in a cascading manner.</p>
+        </div>
+        <div class="item item-steve">
+          <img src="/static/images/auro/moreobj_0.gif" alt="transfer between robots" width="100%">
+          <p>Our method is data-efficient for training and transfer. This is achieved by forming sub-modules through attention layers in a cascading manner.</p>
+        </div>
+        <div class="item item-steve">
+          <img src="/static/images/auro/moreobj_7.gif" alt="transfer between robots" width="100%">
+          <p>Our method is data-efficient for training and transfer. This is achieved by forming sub-modules through attention layers in a cascading manner.</p>
+        </div>
+        <div class="item item-steve">
+          <img src="/static/images/auro/moreobj_28.gif" alt="transfer between robots" width="100%">
+          <p>Our method is data-efficient for training and transfer. This is achieved by forming sub-modules through attention layers in a cascading manner.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <!-- Abstract. -->
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Abstract</h2>
+        <div class="content has-text-justified">
+          <p>
+            Training language-conditioned imitation learning policies is typically time-consuming and resource-intensive. Additionally, the resulting controllers are tailored to the specific robot they were trained on, making it difficult to transfer them to other robots with different dynamics. To address these challenges, we propose a new approach called Hierarchical Modularity, which enables more efficient training and subsequent transfer of such policies across different types of robots. The approach incorporates Supervised Attention which bridges the gap between modular and end-to-end learning by enabling the re-use of functional building blocks. In this contribution, we build upon our previous work, showcasing the extended utilities and improved performance by expanding the hierarchy to include new tasks and introducing an automated pipeline for synthesizing a large quantity of novel objects. We demonstrate the effectiveness of this approach through extensive simulated and real-world robot manipulation experiments.
+          </p>
+        </div>
+      </div>
+    </div>
+    <!--/ Abstract. -->
+
+  
+  </div>
+  </section>
+
+
+  <section class="hero is-light is-small">
+    <div class="hero-body">
+      <div class="columns is-centered has-text-centered">
+        <h2 class="title is-3">Obstacle Avoidnace</h2>
+      </div>
+      <div class="container">
+        <div id="results-carousel" class="carousel results-carousel">
+          <div class="item item-steve">
+            <img src="/static/images/auro/obstacle_1610.gif" alt="transfer between robots" width="100%">
+            <p>Our method is data-efficient for training and transfer. This is achieved by forming sub-modules through attention layers in a cascading manner.</p>
+          </div>
+          <div class="item item-steve">
+            <img src="/static/images/auro/obstacle_1636.gif" alt="transfer between robots" width="100%">
+            <p>Our method is data-efficient for training and transfer. This is achieved by forming sub-modules through attention layers in a cascading manner.</p>
+          </div>
+          <div class="item item-steve">
+            <img src="/static/images/auro/obstacle_1642.gif" alt="transfer between robots" width="100%">
+            <p>Our method is data-efficient for training and transfer. This is achieved by forming sub-modules through attention layers in a cascading manner.</p>
+          </div>
+          <div class="item item-steve">
+            <img src="/static/images/auro/obstacle_1645.gif" alt="transfer between robots" width="100%">
+            <p>Our method is data-efficient for training and transfer. This is achieved by forming sub-modules through attention layers in a cascading manner.</p>
+          </div>
+          <div class="item item-steve">
+            <img src="/static/images/auro/obstacle_1648.gif" alt="transfer between robots" width="100%">
+            <p>Our method is data-efficient for training and transfer. This is achieved by forming sub-modules through attention layers in a cascading manner.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  
+  
+<section class="hero is-light is-small">
+  <div class="hero-body">
+
+
+
+
+      <div class="columns is-centered has-text-centered">
+        <h2 class="title is-3">Relational Tasks</h2>
+      </div>
+      <div class="container">
+        <div id="results-carousel" class="carousel results-carousel">
+          <div class="item item-steve">
+            <img src="/static/images/auro/2obj_vel_0.gif" alt="transfer between robots" width="100%">
+            <p>Our method is data-efficient for training and transfer. This is achieved by forming sub-modules through attention layers in a cascading manner.</p>
+          </div>
+          <div class="item item-steve">
+            <img src="/static/images/auro/2obj_vel_5.gif" alt="transfer between robots" width="100%">
+            <p>Our method is data-efficient for training and transfer. This is achieved by forming sub-modules through attention layers in a cascading manner.</p>
+          </div>
+          <div class="item item-steve">
+            <img src="/static/images/auro/2obj_vel_6.gif" alt="transfer between robots" width="100%">
+            <p>Our method is data-efficient for training and transfer. This is achieved by forming sub-modules through attention layers in a cascading manner.</p>
+          </div>
+          <div class="item item-steve">
+            <img src="/static/images/auro/2obj_vel_1.gif" alt="transfer between robots" width="100%">
+            <p>Our method is data-efficient for training and transfer. This is achieved by forming sub-modules through attention layers in a cascading manner.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+
+<section class="hero is-light is-small">
+  <div class="hero-body">
+    <!-- Intro. -->
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Method</h2>
+        <h3 class="title is-4">Overview</h3>
+        <div class="content has-text-centered">
+          <img src="/static/images/auro/overview.png"
+           class="interpolation-image"
+           alt="Interpolate start reference image."
+           width="800em"/>
+        </div>
+        <div class="content has-text-justified">
+          <p>
+            This figure is a very typical imitation learning pipeline. The inputs are usually defined as an RGB image, the joint angles, and the language as instruction. The output is the action trajectory. With expert demonstrations, we can train an end-2-end policy network. Many works have shown success using this paradigm, and have shown a lot of great results. However, they also exhibit the characteristics of being data hungry. They usually require a lot of training data although robot data is usually hard to acquire. Therefore, this work focuses on finding ways to make language conditioned imitation learning more data efficient. We propose to still train an end-2-end model. However, by designing specific attention techniques which routes the information flow in desired manner, we created different submodules that account for different subtasks within the same network. 
+          </p>
+        </div>
+      </div>
+    </div>
+    <!--/ Intro. -->
+
+    <!-- Method. -->
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h3 class="title is-4">Modularity</h3>
+        <div class="content has-text-centered">
+          <img src="/static/images/supervised_attn_AdobeExpress.gif"
+           class="interpolation-image"
+           alt="Interpolate start reference image."
+           width="500em"/>
+        </div>
+        <div class="content has-text-justified">
+          <p>
+            We implement building blocks called sub-modules that realize specialized sub-tasks. These modules are implemented in the same transformer. As an example, the EE module is assigned the task of tracking the end-effector, while the DISP module is supposed to calculate the displacement between the target object and the end-effector. 
+          </p>
+        </div>
+      </div>
+    </div>
+    <!--/ Method. -->
+
+
+    <!-- Hierarchy. -->
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h3 class="title is-4">Hierarchy of Modules</h3>
+        <div class="content has-text-centered">
+          <img src="/static/images/auro/default_hierarchy.png"
+            class="interpolation-image"
+            alt="Interpolate start reference image."
+            width="500em"/>
+          </div>
+          <div class="content has-text-justified">
+          <p>
+            Since we are able to create multiple sub-modules, we can connect them to a hierarchy for desired tasks. The hierarchy shown here is a very typical example for common manipulation tasks. Each node here is a submodule and the arrow represents the attention token embeddings between attention layers. Firstly we understand the language input, from which we can find target location. After also finding end-effector location, we can then calculate the displacement between them, which in the end will contribute to the controller sub-module that outputs the final action trajectory.
+          </p>
+        </div>
+      </div>
+    </div>
+    <!--/ Hierarchy. -->
+
+    <!-- Finetuning a Module -->
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h3 class="title is-4">Finetuning Trained Modules</h3>
+        <div class="content has-text-centered">
+          <img src="/static/images/transfer_robots.gif"
+            class="interpolation-image"
+            alt="Interpolate start reference image."
+            width="500em"/>
+          </div>
+          <div class="content has-text-justified">
+          <p>
+            After training on a task, we can easily finetune some modules. For example, finetuning the CTRL (motion control) module gives us the opportunities to transfer the trained policy to an unseen robot embodiment.
+          </p>
+        </div>
+      </div>
+    </div>
+    <!--/ Finetuning a Module. -->
+
+    <!-- Extended Hierarchy. -->
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h3 class="title is-4">Extending the Hierarchy</h3>
+        <div class="content has-text-centered">
+          <img src="/static/images/auro/extended_hierarchies.png"
+            class="interpolation-image"
+            alt="Interpolate start reference image."
+            width="500em"/>
+        </div>
+        <div class="content has-text-justified">
+          <p>
+            Because of the hierarchical nature, we can add new modules to the whole architecture easily. For example, we add a branch of modules for obstacle avoidance. Similarly, we detect the obstacle first, and calculate its displacement from the end-effector, which contributes to the controller module to generate the trajectory. Another case (b) is the hierarchy for relational tasks, i.e., "Put A to the right of B".
+          </p>
+        </div>
+      </div>
+    </div>
+    <!--/ Extended Hierarchy. -->
+
+  </div>
+</section>
+
+
+
+<section class="section" id="BibTeX">
+  <div class="container is-max-desktop content">
+    <h2 class="title">BibTeX</h2>
+    <pre><code>@article{zhou2023learning,
+      title={Learning modular language-conditioned robot policies through attention},
+      author={Zhou, Yifan and Sonawani, Shubham and Phielipp, Mariano and Ben Amor, Heni and Stepputtis, Simon},
+      journal={Autonomous Robots},
+      pages={1--21},
+      year={2023},
+      publisher={Springer}
+    }
+    </code></pre>
+  </div>
+</section>
+
+
+<footer class="footer">
+  <div class="container">
+    <div class="columns is-centered">
+      <div class="column is-8">
+        <div class="content">
+          <p>
+            Website template borrowed from <a href="https://github.com/nerfies/nerfies.github.io">NeRFies</a> made by <a href="https://keunhong.com/">Keunhong Park</a>.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
